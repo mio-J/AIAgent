@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="border_overlay" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="ChatBubbleBgTextView">
+        <attr name="hasBubbleBg" format="boolean" />
+        <attr name="bubbleColor" format="color|reference" />
+        <attr name="cornerRadius" format="dimension|reference" />
+        <attr name="arrowDirection" format="enum">
+            <enum name="left" value="0" />
+            <enum name="right" value="1" />
+        </attr>
+        <attr name="arrowWidth" format="dimension|reference" />
+        <attr name="arrowHeight" format="dimension|reference" />
+        <attr name="arrowPosition" format="float|reference" />
+    </declare-styleable>
+</resources>
