@@ -1,36 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="25dp">
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp">
 
+    <!-- 右侧头像：保持与左侧一致的 48dp，距离边缘 8dp -->
     <com.ts.phi.views.CircleImageView
         android:id="@+id/ci_icon"
-        android:layout_width="104dp"
-        android:layout_height="104dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="26dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/tv_content" />
 
-
+    <!-- 右侧气泡：严格镜像左侧 -->
+    <!-- 左侧是 marginStart=12dp 到头像，右侧应该是 marginEnd=12dp 到头像 -->
+    <!-- 左侧 maxWidth=320dp，右侧保持一致 -->
     <com.ts.phi.views.ChatBubbleBgTextView
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:gravity="left|center_vertical"
-        android:maxWidth="942px"
-        android:minHeight="109dp"
-        android:padding="20dp"
-        android:paddingEnd="35dp"
-        android:textSize="22sp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginStart="64dp"
+        android:gravity="start|center_vertical"
+        android:maxWidth="800dp"
+        android:minHeight="56dp"
+        android:padding="16dp"
+        android:paddingEnd="25dp"
+        android:paddingStart="20dp"
+        android:textColor="#E8EAED"
+        android:textSize="17sp"
+        android:lineSpacingMultiplier="1.2"
         app:arrowDirection="right"
-        app:arrowHeight="30dp"
-        app:arrowWidth="20dp"
-        app:bubbleColor="#FFCDE0FE"
+        app:arrowHeight="8dp"
+        app:arrowWidth="6dp"
+        app:arrowPosition="0.8"
+        app:bubbleColor="#1E3A5F"
+        app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@id/ci_icon"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 时间戳：与左侧 AI thinking costs 严格镜像 -->
+    <!-- 左侧是: layout_constraintStart_toStartOf="@id/tv_content" + marginStart=60dp -->
+    <!-- 右侧应该是: layout_constraintEnd_toEndOf="@id/tv_content" + marginEnd=60dp -->
+    <TextView
+        android:id="@+id/tv_send_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="60dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:textColor="#8AB4F8"
+        android:textSize="12sp"
+        android:fontFamily="monospace"
+        app:layout_constraintEnd_toEndOf="@id/tv_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

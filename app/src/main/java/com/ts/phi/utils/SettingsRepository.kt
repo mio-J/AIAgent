@@ -30,7 +30,7 @@ class SettingsRepository private constructor(context: Context) {
      * 使用: settings.is2AxisPerformanceOnly = true
      */
     var is2AxisPerformanceOnly: Boolean
-        get() = prefs.getBoolean(KEY_2AXIS_PERF_ONLY, false)
+        get() = prefs.getBoolean(KEY_2AXIS_PERF_ONLY, true)
         set(value) = prefs.edit().putBoolean(KEY_2AXIS_PERF_ONLY, value).apply()
 
     /**

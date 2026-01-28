@@ -1,59 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="25dp">
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp">
 
+    <!-- 左侧头像 -->
     <com.ts.phi.views.TextCircleView
         android:id="@+id/tcv_icon"
-        android:layout_width="104dp"
-        android:layout_height="104dp"
-        android:layout_marginStart="26dp"
-        android:layout_marginTop="5dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/tv_content" />
 
-
+    <!-- 聊天气泡：深色主题（移除了不支持的 stroke 属性） -->
     <com.ts.phi.views.ChatBubbleBgTextView
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:gravity="left|center_vertical"
-        app:bubbleColor="#FFE1E2E4"
-        android:maxWidth="942px"
-        android:minHeight="109dp"
-        android:padding="20dp"
-        android:textSize="22sp"
-        android:paddingStart="35dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="64dp"
+        android:gravity="start|center_vertical"
+        android:maxWidth="800dp"
+        android:minHeight="56dp"
+        android:padding="16dp"
+        android:paddingStart="25dp"
+        android:paddingEnd="20dp"
+        android:textColor="#E8EAED"
+        android:textSize="16sp"
+        android:lineSpacingMultiplier="1.2"
         app:arrowDirection="left"
-        app:arrowWidth="20dp"
-        app:arrowHeight="30dp"
+        app:arrowHeight="8dp"
+        app:arrowWidth="6dp"
+        app:bubbleColor="#2C2E33"
+        app:arrowPosition="0.8"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@id/tcv_icon"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_think_cost_title"
+    <!-- AI 思考成本标签（移除了图片引用） -->
+    <LinearLayout
+        android:id="@+id/cost_chip_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
-        android:layout_marginTop="20dp"
-        android:text="AI thinking costs:"
-        android:textColor="#FF667CC8"
-        android:textSize="18sp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_cost_chip_dark"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
         app:layout_constraintStart_toStartOf="@id/tv_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_content" />
+        app:layout_constraintTop_toBottomOf="@id/tv_content">
 
-    <TextView
-        android:id="@+id/tv_think_costs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:textColor="#FF575755"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@id/tv_think_cost_title"
-        app:layout_constraintTop_toTopOf="@id/tv_think_cost_title" />
+        <TextView
+            android:id="@+id/tv_think_cost_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AI thinking costs:"
+            android:textColor="#8AB4F8"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/tv_think_costs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:textColor="#BDC1C6"
+            android:textSize="12sp"
+            android:fontFamily="monospace" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

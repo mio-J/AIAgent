@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
  * 自定义View，AI圆角view
  */
 public class TextCircleView extends View {
-    public static final int DEFAUT_TEXT_SIZE = 60;
+    public static final int DEFAUT_TEXT_SIZE = 30;
     public static final int STROKE_WIDTH = 4;
     private String mText = "AI";
     private int mColor = Color.parseColor("#FF6929F1");

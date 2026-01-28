@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import com.ts.phi.enums.Role;
 import com.ts.phi.enums.State;
 import com.ts.phi.views.SettingDialog;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import kotlin.Unit;
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
     private TextView tvValue3;
     private TextView tvValue4;
 
-    private Button gearButton;
+    private ImageButton gearButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
         gearButton.setOnClickListener(v -> {
             SettingDialog settingDialog = new SettingDialog(MainActivity.this);
             settingDialog.setOnConfirmListener(aBoolean -> {
-                Toast.makeText(MainActivity.this, "Setting saved"+aBoolean, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Setting saved" + aBoolean, Toast.LENGTH_SHORT).show();
                 return null;
             });
             settingDialog.show();
@@ -268,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
     public void onContentUpdateWithTime(String content, Role from, Role
             to, State currentState, long thinkingTime) {
         // Update UI on the main thread
-        Log.d(TAG, "onContentUpdateWithTime thinkingTime: "+thinkingTime);
+        Log.d(TAG, "onContentUpdateWithTime thinkingTime: " + thinkingTime);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -296,7 +298,9 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
                         break;
                 }
                 ConversationBean bean = new ConversationBean(type, content);
-                bean.setThinkCost(thinkingTime + " ms");
+                DecimalFormat df = new DecimalFormat("0.00");
+                String formatted = df.format(thinkingTime / 1000.0);
+                bean.setThinkCost(formatted + " sec");
 
                 // If it's a user message, add user icon
                 if (type == ConversationBean.ConversationType.USER) {

@@ -106,6 +106,8 @@ public class PhiService extends Service implements StateMachine.StateMachineList
     public void receiveDmsEvent(String event) {
         Log.i(TAG, "public method - receive DMS event:" + event);
         if (stateMachine != null) {
+            long startTime = SystemClock.elapsedRealtime();
+            stateMachine.setRequestStartTime(startTime);
             stateMachine.handleDmsEvent(event);
         }
     }
@@ -113,6 +115,8 @@ public class PhiService extends Service implements StateMachine.StateMachineList
     public void receiveUserInput(String userInput) {
         Log.i(TAG, "receive user input: [" + userInput + "]");
         if (stateMachine != null) {
+            long startTime = SystemClock.elapsedRealtime();
+            stateMachine.setRequestStartTime(startTime);
             stateMachine.handleUserInput(userInput);
         }
     }

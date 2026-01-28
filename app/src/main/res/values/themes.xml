@@ -6,4 +6,7 @@
     </style>
 
     <style name="Theme.Phi" parent="Base.Theme.Phi" />
+    <style name="SpinnerDarkTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:popupBackground">#2C2C2C</item>
+    </style>
 </resources>

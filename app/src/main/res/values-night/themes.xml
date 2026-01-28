@@ -4,4 +4,7 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+    <style name="SpinnerDarkTheme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:popupBackground">#2C2C2C</item>
+    </style>
 </resources>

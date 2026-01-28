@@ -1,5 +1,7 @@
 package com.ts.phi.state;
 
+import static com.ts.phi.constants.PromptConstants.ENTER_ADJUST;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -50,6 +52,7 @@ public class StateMachine {
     private boolean chartMode = false;
     private boolean isAdjust = false;
     private boolean isRealTest = true;
+    private boolean prohibitOutput = false;
 
     private final PromptTemplateManager promptManager;
     private WeakReference<StateMachineListener> listenerRef;
@@ -105,7 +108,6 @@ public class StateMachine {
     public void handleDmsEvent(String event) {
         Log.i(TAG, "receive DMS event: [" + event + "], in state: [" + currentState + "]");
         notifyContentUpdate(event, Role.DMS, Role.AI_AGENT, 0);
-        setRequestStartTime(Integer.MAX_VALUE);
         switch (event) {
             case PromptConstants.EVENT_WINDING_ROAD:
                 handleWindingRoadEvent();
@@ -229,7 +231,15 @@ public class StateMachine {
         Log.i(TAG, "receive user input: [" + userInput + "]");
         stopTimeoutTimer();
         lastUserInput = userInput;
-
+        //做强制判断性能调整的逻辑
+        if (settings.is2AxisPerformanceOnly()) {
+            Log.d(TAG, "processPhiAnswer notify: 做强制判断性能调整的逻辑");
+            notifyContentUpdate(userInput, Role.USER, Role.AI_AGENT, 0);
+            prohibitOutput = true;
+            processPhiAnswer("A");
+            prohibitOutput = false;
+            return;
+        }
         switch (currentQuestionType) {
             case IDLE:
                 handleIdleInput(userInput);
@@ -365,12 +375,6 @@ public class StateMachine {
         }
         Log.i(TAG, "processPhiAnswer letterResult: " + letterResult);
 
-        //做强制判断性能调整的逻辑
-        if (settings.is2AxisPerformanceOnly()) {
-            Log.d(TAG, "processPhiAnswer notify: 做强制判断性能调整的逻辑");
-            letterResult = "A";
-        }
-
         switch (currentQuestionType) {
             case SPORTS_MODE_AGREE:
                 processSportsModeAgree(letterResult);
@@ -448,7 +452,7 @@ public class StateMachine {
         }
 
         if ("A".equals(letterResult)) {
-            handleAdjustResult("promptTemplate_feedback", PromptConstants.ENTER_ADJUST, QuestionType.AUTO_FEEDBACK);
+            handleAdjustResult("promptTemplate_feedback", ENTER_ADJUST, QuestionType.AUTO_FEEDBACK);
             return;
         }
 
@@ -507,7 +511,7 @@ public class StateMachine {
         }
 
         if ("A".equals(letterResult)) {
-            handleAdjustResult("promptTemplate_feedback", PromptConstants.ENTER_ADJUST, QuestionType.CUSTOM_MODE_FEEDBACK);
+            handleAdjustResult("promptTemplate_feedback", ENTER_ADJUST, QuestionType.CUSTOM_MODE_FEEDBACK);
             return;
         }
 
@@ -546,7 +550,7 @@ public class StateMachine {
         }
 
         if ("A".equals(letterResult)) {
-            handleAdjustResult("promptTemplate_feedback", PromptConstants.ENTER_ADJUST, QuestionType.IDLE);
+            handleAdjustResult("promptTemplate_feedback", ENTER_ADJUST, QuestionType.IDLE);
             return;
         }
 
@@ -616,7 +620,7 @@ public class StateMachine {
     }
 
     private String formatAdjustmentText(AdjustmentResult result) {
-        String ra = formatValue(result.getRa(), true);
+        String ra = formatValue(result.getRa(), false);
         String rr = formatValue(result.getRr(), true);
         String ca = formatValue(result.getCa(), false);
         String cr = formatValue(result.getCr(), true);
@@ -733,6 +737,11 @@ public class StateMachine {
     // ==================== Helper Methods ====================
 
     private void showAiToUser(String content) {
+        if (prohibitOutput&&content.equals(ENTER_ADJUST)) {
+            prohibitOutput=false;
+            Log.d(TAG, "showAiToUser 拦截对话: "+content);
+            return;
+        }
         notifyContentUpdate(content, Role.AI_AGENT, Role.USER, getResponseTime());
     }
 
