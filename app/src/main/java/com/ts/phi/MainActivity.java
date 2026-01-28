@@ -29,10 +29,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ts.phi.adapter.ConversationAdapter;
 import com.ts.phi.bean.ConversationBean;
+import com.ts.phi.enums.Role;
+import com.ts.phi.enums.State;
+import com.ts.phi.views.SettingDialog;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements PhiService.PhiServiceListener{
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+
+public class MainActivity extends AppCompatActivity implements PhiService.PhiServiceListener {
     private static final String TAG = "MainActivity";
     private Spinner mSpDest;
     private Spinner mSpDms;
@@ -49,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
 
     private TextView tvValue1;
     private TextView tvValue2;
+    private TextView tvValue3;
+    private TextView tvValue4;
+
+    private Button gearButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +122,9 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
 
         tvValue1 = findViewById(R.id.tv_value1);
         tvValue2 = findViewById(R.id.tv_value2);
+        tvValue3 = findViewById(R.id.tv_value3);
+        tvValue4 = findViewById(R.id.tv_value4);
+        gearButton = findViewById(R.id.setting);
     }
 
     private void initData() {
@@ -129,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
         mSpDest.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                 // 跳过初始选项（position 0）
+                // 跳过初始选项（position 0）
                 if (position == 0) {
                     return;
                 }
@@ -141,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
                 //TODO，通过监听选中项的position处理业务逻辑
                 currentDestination = destData[position];
                 if (serviceBound && phiService != null) {
-                        phiService.setDestination(currentDestination);
+                    phiService.setDestination(currentDestination);
                 }
             }
 
@@ -178,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
                     mSpDms.setSelection(0);
                 } else {
                     Log.w(TAG, "PhiService is not bound, cannot send DMS event");
-                    Toast.makeText(getApplicationContext(),"Service is not connected, please try again later", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Service is not connected, please try again later", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -214,10 +227,10 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
                         mConversationBeans = new ArrayList<>();
                     }
                     ConversationBean bean = new ConversationBean(
-                        ConversationBean.ConversationType.USER,
-                        userCommentStr);
+                            ConversationBean.ConversationType.USER,
+                            userCommentStr);
                     Bitmap userBitmap = BitmapFactory.decodeResource(getResources(),
-                        R.drawable.demo_icon);
+                            R.drawable.demo_icon);
                     bean.setUserIcon(userBitmap);
                     mConversationBeans.add(bean);
                     // 通知列表控件数据变更，刷新画面
@@ -228,82 +241,34 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
                     mRcList.smoothScrollToPosition(mConversationBeans.size() - 1);
                     // TODO，其他业务处理
                     Toast.makeText(getApplicationContext(),
-                    "Service is not connected, please try again later",
-                    Toast.LENGTH_SHORT).show();
+                            "Service is not connected, please try again later",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-
-        ////////////// 右侧数据列表处理 //////////////
-        // 模拟对话列表数据
+        ////////////// 右侧列表控件数据处理 //////////////
         mConversationBeans = new ArrayList<>();
-        /* 
-        // dms
-        ConversationBean bean = new ConversationBean(ConversationBean.ConversationType.DMS,
-                "～走行中、前方●mにワインディング路～");
-        mConversationBeans.add(bean);
-
-        // ai
-        bean = new ConversationBean(ConversationBean.ConversationType.AI,
-                "前方に運転が楽しめそうなワインディングロードがあります\n" +
-                        "スポーツモードに切り替えてこの道に合ったきびきびした\n" +
-                        "乗り味にしませんか？");
-        bean.setThinkCost("1963 ms");
-        mConversationBeans.add(bean);
-
-        // user
-        bean = new ConversationBean(ConversationBean.ConversationType.USER,
-                "いいね！よろしく");
-        Bitmap userBitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.demo_icon);
-        bean.setUserIcon(userBitmap);
-        mConversationBeans.add(bean);
-
-        // ai
-        bean = new ConversationBean(ConversationBean.ConversationType.AI,
-                "分かりました。スポーツモードに変更します");
-        bean.setThinkCost("506 ms");
-        mConversationBeans.add(bean);
-
-
-        // dms
-        bean = new ConversationBean(ConversationBean.ConversationType.DMS,
-                "～走行中、前方●mにワインディング路～");
-        mConversationBeans.add(bean);
-
-        // ai
-        bean = new ConversationBean(ConversationBean.ConversationType.AI,
-                "前方に運転が楽しめそうなワインディングロードがあります\n" +
-                        "スポーツモードに切り替えてこの道に合ったきびきびした\n" +
-                        "乗り味にしませんか？");
-        bean.setThinkCost("1963 ms");
-        mConversationBeans.add(bean);
-
-        // user
-        bean = new ConversationBean(ConversationBean.ConversationType.USER,
-                "いいね！よろしく");
-        bean.setUserIcon(userBitmap);
-        mConversationBeans.add(bean);
-
-        // ai
-        bean = new ConversationBean(ConversationBean.ConversationType.AI,
-                "分かりました。スポーツモードに変更します");
-        bean.setThinkCost("506 ms");
-        mConversationBeans.add(bean);
-
-
-        */
         mConversationAdapter = new ConversationAdapter(this, mConversationBeans);
         mRcList.setLayoutManager(new LinearLayoutManager(this));
         mRcList.setAdapter(mConversationAdapter);
         // 列表最底部位置显示
         mRcList.scrollToPosition(mConversationBeans.size() - 1);
+
+        gearButton.setOnClickListener(v -> {
+            SettingDialog settingDialog = new SettingDialog(MainActivity.this);
+            settingDialog.setOnConfirmListener(aBoolean -> {
+                Toast.makeText(MainActivity.this, "Setting saved"+aBoolean, Toast.LENGTH_SHORT).show();
+                return null;
+            });
+            settingDialog.show();
+        });
     }
 
     @Override
-    public void onContentUpdateWithTime(String content, PhiService.Role from, PhiService.Role to, PhiService.State currentState, long thinkingTime) {
+    public void onContentUpdateWithTime(String content, Role from, Role
+            to, State currentState, long thinkingTime) {
         // Update UI on the main thread
+        Log.d(TAG, "onContentUpdateWithTime thinkingTime: "+thinkingTime);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -330,8 +295,8 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
                         type = ConversationBean.ConversationType.AI;
                         break;
                 }
-               ConversationBean bean = new ConversationBean(type, content);
-               bean.setThinkCost(thinkingTime + " ms");
+                ConversationBean bean = new ConversationBean(type, content);
+                bean.setThinkCost(thinkingTime + " ms");
 
                 // If it's a user message, add user icon
                 if (type == ConversationBean.ConversationType.USER) {
@@ -347,26 +312,41 @@ public class MainActivity extends AppCompatActivity implements PhiService.PhiSer
             }
         });
     }
+
+    public String addPlusIfPositive(String s) {
+        if (s == null) return null;
+        s = s.trim();
+        try {
+            return Integer.parseInt(s) >= 0 && !s.startsWith("-")
+                    ? "+" + s
+                    : s;
+        } catch (NumberFormatException e) {
+            return s;
+        }
+    }
+
     @Override
-    public void onResponsivenessUpdate(String responsiveness) {
+    public void onResponsivenessUpdate(String responsiveness, String relativeResponsiveness) {
         runOnUiThread(new Runnable() {
             @SuppressLint("SetTextI18n")
             @Override
             public void run() {
                 if (tvValue1 != null) {
+                    tvValue3.setText(tvValue1.getText());
                     tvValue1.setText("応答性:" + responsiveness);
-               }
-           }
-      });
+                }
+            }
+        });
     }
 
     @Override
-    public void onConvergenceUpdate(String convergence) {
+    public void onConvergenceUpdate(String convergence, String relativeConvergence) {
         runOnUiThread(new Runnable() {
             @SuppressLint("SetTextI18n")
             @Override
             public void run() {
                 if (tvValue2 != null) {
+                    tvValue4.setText(tvValue2.getText());
                     tvValue2.setText("収束性:" + convergence);
                 }
             }
